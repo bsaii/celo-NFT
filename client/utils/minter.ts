@@ -6,7 +6,18 @@ import { UseCelo } from '@celo/react-celo';
 import { ChangeEvent } from 'react';
 
 // initialize IPFS
-const client = create({url: 'https://ipfs.infura.io:5001/api/v0'});
+const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID || ''
+const INFURA_SECRET_KEY= process.env.NEXT_PUBLIC_INFURA_SECRET_KEY || ''
+const auth =
+    'Basic ' + Buffer.from(INFURA_ID + ':' + INFURA_SECRET_KEY).toString('base64');
+const client = create({
+    host: 'ipfs.infura.io',
+    port: 5001,
+    protocol: 'https',
+    headers: {
+        authorization: auth,
+    },
+});
 
 export type CreateNFTData = {
   name: string;
@@ -27,7 +38,7 @@ export const createNft = async (
 ) => {
     await performActions(async (kit) => {
         if (!name || !description || !ipfsImage) return;
-        const defaultAccount = kit.contracts.getAccounts();
+        const defaultAccount = kit.connection.defaultAccount
 
         // convert NFT metadata to JSON format
         const data = JSON.stringify({

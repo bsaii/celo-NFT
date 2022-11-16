@@ -77,8 +77,6 @@ const AddNfts = ({ save, address }: AddNFTsProps) => {
     setAttributes((oldArray) => [...oldArray, attributeObject]);
   };
 
-  console.log(ipfsImage);
-
   return (
     <>
       <Button
